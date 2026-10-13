@@ -9,7 +9,7 @@
             </div>
             <div class="card-body">
 
-                <!-- Pesan Validasi jika Inputan Kosong / Salah -->
+                <!-- Untuk Pesan Validasi jika Inputan Kosong / Salah -->
                 @if($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0 ps-3">

@@ -9,7 +9,6 @@
 </div>
 
 <div class="row">
-    <!-- Ringkasan Total Skema -->
     <div class="col-md-6 mb-3">
         <div class="card bg-primary text-white shadow-sm">
             <div class="card-body">
@@ -20,7 +19,7 @@
         </div>
     </div>
 
-    <!-- Ringkasan Total Peserta -->
+
     <div class="col-md-6 mb-3">
         <div class="card bg-success text-white shadow-sm">
             <div class="card-body">

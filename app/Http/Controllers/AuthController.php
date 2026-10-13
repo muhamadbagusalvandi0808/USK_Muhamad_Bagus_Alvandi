@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         ]);
 
-        // Cek Credentials ke database (Auth::attempt otomatis mencocokan otomatis password yang di-hash)
+        // Cek Credentials ke database (Auth::attempt otomatis, mencocokan otomatis password yang di-hash)
         if(Auth::attempt($credentials)){
             $request ->session()->regenerate();
 
