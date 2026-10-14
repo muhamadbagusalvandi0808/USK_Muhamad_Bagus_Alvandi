@@ -37,11 +37,16 @@
                             Dashboard
                         </a>
                     </li>
+
+                    {{-- MENU SKEMA: HANYA MUNCUL JIKA ROLE ADMIN --}}
+                    @if(Auth::check() && Auth::user()->role === 'admin')
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('skema.*') ? 'active fw-bold text-white' : '' }}" href="{{ route('skema.index') }}">
                             Data Skema
                         </a>
                     </li>
+                    @endif
+
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('peserta.*') ? 'active fw-bold text-white' : '' }}" href="{{ route('peserta.index') }}">
                             Data Peserta
@@ -61,10 +66,8 @@
             </div>
         </div>
     </nav>
-
     
-    <main class="container my-4 flex-grow-1">
-        
+    <main class="container my-4 grow">
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
                 <strong>Berhasil!</strong> {{ session('success') }}
@@ -84,7 +87,7 @@
 
     <footer class="bg-white border-top py-3 mt-auto">
         <div class="container text-center text-muted small">
-            &copy; 2026 LSP Certify - Uji Sertifikasi Keahlian (USK) Junior Web Developer.
+            &copy; 2026 Uji Sertifikasi Kompetensi -- SMKN 64 Jakarta
         </div>
     </footer>
 
