@@ -55,19 +55,24 @@
                             <label class="form-label fw-semibold small text-secondary">Alamat Email</label>
                             <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="user123@gmail.com" required autofocus>
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label class="form-label fw-semibold small text-secondary">Password</label>
                             <input type="password" name="password" class="form-control" placeholder="••••••••" required>
                         </div>
-                        <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold shadow-sm">LOGIN</button>
+                        <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold shadow-sm mb-3">LOGIN</button>
                     </form>
+
+                    <!-- Tautan Pindah ke Halaman Register -->
+                    <div class="text-center text-muted small">
+                        Belum punya akun? <a href="{{ route('register') }}" class="text-decoration-none fw-semibold">Daftar Sekarang</a>
+                    </div>
 
                 </div>
             </div>
 
             <!-- Catatan Kaki Kecil -->
             <div class="text-center mt-3 text-muted" style="font-size: 0.8rem;">
-                &copy; 2026 Junior Web Developer Assessment
+                &copy; 2026 Uji Sertifikasi Kompetensi. SMKN 64 Jakarta
             </div>
 
         </div>

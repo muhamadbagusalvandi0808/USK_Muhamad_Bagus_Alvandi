@@ -87,7 +87,7 @@
 
     <header class="py-3">
         <div class="container d-flex justify-content-between align-items-center">
-            <a href="#" class="brand-title">SIPERSI JWD</a>
+            <a href="#" class="brand-title">BNSP ID</a>
             @if (Route::has('login'))
                 <div>
                     @auth
@@ -103,7 +103,7 @@
     <main class="container text-center my-auto py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <h1 class="hero-title">Sistem Informasi Uji Sertifikasi<br>Junior Web Developer</h1>
+                <h1 class="hero-title">Sistem Informasi Uji Sertifikasi<br>Kompetensi</h1>
                 <p class="hero-desc">
                     Platform terpadu untuk pengelolaan data skema dan peserta uji kompetensi sertifikasi secara efisien dan terstruktur.
                 </p>

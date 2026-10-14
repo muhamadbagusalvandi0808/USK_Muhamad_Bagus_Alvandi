@@ -60,30 +60,35 @@ class AuthController extends Controller
     
     public function register(Request $request)
     {
-        
+        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed', // butuh input konfirmasi password
+            'password' => 'required|string|min:6|confirmed',
         ], [
             'name.required' => 'Nama lengkap wajib diisi!',
             'email.required' => 'Email wajib diisi!',
-            'email.email' => 'Format email tidak valid!',
-            'email.unique' => 'Email sudah terdaftar, gunakan email lain!',
+            'email.email'    => 'Format email tidak valid!',
+            'email.unique'   => 'Email sudah terdaftar, gunakan email lain!',
             'password.required' => 'Password wajib diisi!',
-            'password.min' => 'Password minimal harus 6 karakter!',
+            'password.min'   => 'Password minimal harus 6 karakter!',
             'password.confirmed' => 'Konfirmasi password tidak cocok!',
         ]);
 
-        
         $user = \App\Models\User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role' => 'user', 
+            'role' => 'user',
         ]);
 
-        
+        \App\Models\Peserta::create([
+            'nama' => $request->name,
+            'email' => $request->email,
+            'nis' => '-',
+            'alamat' => '-',                      
+        ]);
+
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login menggunakan akun Anda.');
     }
 }

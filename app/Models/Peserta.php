@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Peserta extends Model
 {
     protected $fillable = [
-        'no_peserta',
+'skema_id',
+        'nik',
+        'nis', 
         'nama',
+        'jk',
         'email',
+        'telp',
         'alamat',
-        'skema_id',
     ];
 
     public function skema()

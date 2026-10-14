@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Peserta;
 use App\Models\Skema;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 class PesertaController extends Controller
 {
@@ -14,18 +14,17 @@ class PesertaController extends Controller
         $search = $request->input('search');
         $user = Auth::user();
 
-        // Query dasar dengan relasi skema
         $query = Peserta::with('skema');
 
-        // Jika yang login BUKAN admin, filter hanya data miliknya sendiri berdasarkan email
+        // Jika user biasa, hanya tampilkan data peserta miliknya sendiri
         if ($user->role !== 'admin') {
             $query->where('email', $user->email);
         }
 
-        // Fitur Pencarian Nama Peserta & Filter Pagination
         $pesertas = $query->when($search, function ($query, $search) {
                 return $query->where('nama', 'like', "%{$search}%")
-                             ->orWhere('no_peserta', 'like', "%{$search}%");
+                             ->orWhere('nis', 'like', "%{$search}%")
+                             ->orWhere('nik', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(10);
@@ -33,43 +32,14 @@ class PesertaController extends Controller
         return view('peserta.index', compact('pesertas', 'search'));
     }
 
-    public function create()
-    {
-        // HANYA ADMIN yang boleh mengakses form tambah peserta
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Akses ditolak. Hanya Admin yang dapat menambah data peserta.');
-        }
-
-        $skemas = Skema::all();
-        return view('peserta.create', compact('skemas'));
-    }
-
-    public function store(Request $request)
-    {
-        // HANYA ADMIN yang boleh menyimpan data peserta baru
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Akses ditolak. Hanya Admin yang dapat menambah data peserta.');
-        }
-
-        $request->validate([
-            'skema_id'   => 'required|exists:skemas,id',
-            'no_peserta' => 'required|unique:pesertas,no_peserta',
-            'nama'       => 'required',
-            'email'      => 'required|email|unique:pesertas,email',
-            'alamat'     => 'required',
-        ]);
-
-        Peserta::create($request->all());
-
-        return redirect()->route('peserta.index')->with('success', 'Data Peserta berhasil ditambahkan oleh Admin!');
-    }
+    // Fungsi create dan store dikosongkan/dihapus karena pendaftaran peserta 
+    // kini dilakukan secara mandiri lewat proses Register & Edit Profil.
 
     public function show(int $id)
     {
         $peserta = Peserta::findOrFail($id);
         $user = Auth::user();
 
-        // Keamanan: User biasa hanya boleh melihat data miliknya sendiri
         if ($user->role !== 'admin' && $peserta->email !== $user->email) {
             abort(403, 'Akses ditolak.');
         }
@@ -82,7 +52,7 @@ class PesertaController extends Controller
         $peserta = Peserta::findOrFail($id);
         $user = Auth::user();
 
-        // Keamanan: Jika bukan admin DAN data bukan milik user tersebut, tolak akses
+        // Keamanan: Pastikan user hanya bisa mengedit datanya sendiri (kecuali admin)
         if ($user->role !== 'admin' && $peserta->email !== $user->email) {
             abort(403, 'Akses ditolak. Anda hanya dapat mengedit data milik sendiri.');
         }
@@ -96,29 +66,32 @@ class PesertaController extends Controller
         $peserta = Peserta::findOrFail($id);
         $user = Auth::user();
 
-        // Keamanan: Cek hak akses edit
         if ($user->role !== 'admin' && $peserta->email !== $user->email) {
             abort(403, 'Akses ditolak. Anda hanya dapat memperbarui data milik sendiri.');
         }
 
+        // Validasi kelengkapan profil peserta
         $request->validate([
-            'skema_id'   => 'required|exists:skemas,id',
-            'no_peserta' => 'required|unique:pesertas,no_peserta,' . $peserta->id,
+            'nik'        => 'required|max:20|unique:pesertas,nik,' . $peserta->id,
+            'nis'        => 'required|min:4|max:10|unique:pesertas,nis,' . $peserta->id,
             'nama'       => 'required',
-            'email'      => 'required|email|unique:pesertas,email,' . $peserta->id,
+            'jk'         => 'required',
+            'skema_id'   => 'required|exists:skemas,id',
+            'telp'       => 'required|max:15',
             'alamat'     => 'required',
+            'email'      => 'required|email|unique:pesertas,email,' . $peserta->id,
         ]);
 
         $data = $request->all();
 
-        // Jika yang mengedit adalah user biasa, pastikan emailnya terkunci tidak berubah ke email lain
+        // Jika yang mengedit adalah user biasa, kunci emailnya agar tidak bisa diubah
         if ($user->role !== 'admin') {
             $data['email'] = $user->email;
         }
 
         $peserta->update($data);
 
-        return redirect()->route('peserta.index')->with('success', 'Data Peserta berhasil diperbarui!');
+        return redirect()->route('peserta.index')->with('success', 'Data Profil Peserta berhasil dilengkapi dan diperbarui!');
     }
 
     public function destroy(int $id)
@@ -126,13 +99,14 @@ class PesertaController extends Controller
         $peserta = Peserta::findOrFail($id);
         $user = Auth::user();
 
-        // Keamanan: Hanya admin yang boleh menghapus data peserta
         if ($user->role !== 'admin') {
             abort(403, 'Akses ditolak. Hanya Admin yang dapat menghapus data peserta.');
         }
 
+        \App\Models\User::where('email', $peserta->email)->delete();
+
         $peserta->delete();
 
-        return redirect()->route('peserta.index')->with('success', 'Data Peserta berhasil dihapus!');
+        return redirect()->route('peserta.index')->with('success', 'Data Peserta beserta akun loginnya berhasil dihapus!');
     }
 }
