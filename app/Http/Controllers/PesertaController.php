@@ -70,7 +70,6 @@ class PesertaController extends Controller
             abort(403, 'Akses ditolak. Anda hanya dapat memperbarui data milik sendiri.');
         }
 
-        // Validasi kelengkapan profil peserta
         $request->validate([
             'nik'        => 'required|max:20|unique:pesertas,nik,' . $peserta->id,
             'nis'        => 'required|min:4|max:10|unique:pesertas,nis,' . $peserta->id,
@@ -84,7 +83,6 @@ class PesertaController extends Controller
 
         $data = $request->all();
 
-        // Jika yang mengedit adalah user biasa, kunci emailnya agar tidak bisa diubah
         if ($user->role !== 'admin') {
             $data['email'] = $user->email;
         }
@@ -109,4 +107,26 @@ class PesertaController extends Controller
 
         return redirect()->route('peserta.index')->with('success', 'Data Peserta beserta akun loginnya berhasil dihapus!');
     }
+
+    public function updateStatus(Request $request, int $id)
+    {
+        $user = Auth::user();
+        
+        if ($user->role !== 'admin') {
+            abort(403, 'Akses ditolak. Hanya Admin yang dapat mengubah status.');
+        }
+
+        $request->validate([
+            'status' => 'required|in:Proses,Kompeten,Belum Kompeten',
+        ]);
+
+        $peserta = Peserta::findOrFail($id);
+        $peserta->update([
+            'status' => $request->status
+        ]);
+
+        return redirect()->route('peserta.index')->with('success', 'Status kelulusan peserta berhasil diperbarui!');
+    }
+
+        
 }

@@ -15,6 +15,7 @@ class Peserta extends Model
         'email',
         'telp',
         'alamat',
+        'status',
     ];
 
     public function skema()

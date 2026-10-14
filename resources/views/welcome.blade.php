@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Datang - SIPERSI JWD</title>
+    <title>Selamat Datang - BNSP ID</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #0f172a; /* Warna dark biru pekat sederhana */
+            background-color: #0f172a; 
             color: #f8fafc;
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
@@ -17,7 +17,6 @@
             justify-content: space-between;
         }
 
-        /* Top Header Sederhana */
         header {
             border-bottom: 1px solid #1e293b;
         }
@@ -29,7 +28,6 @@
             text-decoration: none;
         }
 
-        /* Hero Content Simple */
         .hero-title {
             font-weight: 700;
             font-size: 2.25rem;
@@ -45,7 +43,6 @@
             line-height: 1.6;
         }
 
-        /* Style Button Sederhana */
         .btn-primary-custom {
             background-color: #2563eb;
             color: #ffffff;
@@ -75,7 +72,6 @@
             border-color: #475569;
         }
 
-        /* Footer */
         footer {
             border-top: 1px solid #1e293b;
             color: #64748b;

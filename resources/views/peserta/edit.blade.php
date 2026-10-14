@@ -9,7 +9,6 @@
             </div>
             <div class="card-body p-4">
 
-                {{-- Tampilkan Error Validasi jika ada --}}
                 @if($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0">

@@ -10,7 +10,6 @@ class SkemaController extends Controller
 {
     public function index()
     {
-        // Pastikan hanya admin yang bisa akses
         if (Auth::user()->role !== 'admin') {
             abort(403, 'Akses ditolak. Halaman ini khusus untuk Administrator.');
         }

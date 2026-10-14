@@ -41,7 +41,6 @@
             </tbody>
         </table>
 
-        <!-- Navigasi Halaman (Pagination) -->
         {{ $skemas->links() }}
     </div>
 </div>

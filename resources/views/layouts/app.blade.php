@@ -25,7 +25,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2">
         <div class="container">
             <a class="navbar-brand fw-bold text-uppercase tracking-wide" href="{{ route('dashboard') }}">
-                 SERTIFIKASI <span class="badge bg-primary fs-6 ms-1">JWD</span>
+                 SERTIFIKASI <span class="badge bg-primary fs-6 ms-1">BNSP</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -38,7 +38,6 @@
                         </a>
                     </li>
 
-                    {{-- MENU SKEMA: HANYA MUNCUL JIKA ROLE ADMIN --}}
                     @if(Auth::check() && Auth::user()->role === 'admin')
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('skema.*') ? 'active fw-bold text-white' : '' }}" href="{{ route('skema.index') }}">

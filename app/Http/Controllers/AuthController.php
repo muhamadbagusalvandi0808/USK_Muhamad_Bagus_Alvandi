@@ -13,7 +13,6 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // memproses login
     public function login(Request $request)
     {
         // Validasi input
@@ -26,6 +25,14 @@ class AuthController extends Controller
             'password.required' => 'Password Wajib Diisi!!'
 
         ]);
+
+        $userExists = \App\Models\User::where('email', $request->email)->exists();
+
+        if (!$userExists) {
+            return back()->withErrors([
+                'email' => 'Akun ini tidak terdaftar dalam sistem.',
+            ])->withInput();
+        }
 
         // Cek Credentials ke database (Auth::attempt otomatis, mencocokan otomatis password yang di-hash)
         if(Auth::attempt($credentials)){
@@ -40,7 +47,6 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    // 3.Memproses Logout
     public function logout(Request $request)
     {
         Auth::logout();
@@ -60,7 +66,6 @@ class AuthController extends Controller
     
     public function register(Request $request)
     {
-        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

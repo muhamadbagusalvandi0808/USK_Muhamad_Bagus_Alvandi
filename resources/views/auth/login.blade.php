@@ -4,43 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - SIPERSI JWD</title>
-    <!-- Ini Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f4f6f9;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
         }
         .card {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
         }
         .form-control {
-            padding: 0.65rem 0.85rem;
+            padding: 0.75rem 1rem;
             font-size: 0.95rem;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
         }
         .form-control:focus {
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.12);
+            border-color: #86b7fe;
+        }
+        .btn-dark {
+            border-radius: 8px;
+            transition: all 0.2s ease-in-out;
         }
     </style>
 </head>
-<body class="d-flex align-items-center vh-100">
+<body class="d-flex align-items-center py-4">
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-4">
+        <div class="col-md-5 col-lg-4">
             
             <div class="card shadow-sm">
                 <div class="card-body p-4 p-md-5">
                     
                     <div class="text-center mb-4">
-                        <h4 class="fw-bold text-dark mb-1">FORM LOGIN</h4>
-                        <p class="text-muted small">Sistem Sertifikasi Kompetensi</p>
+                        <div class="badge bg-dark bg-opacity-10 text-dark px-3 py-1 rounded-pill mb-3 fw-semibold" style="font-size: 0.75rem;">BNSP ID</div>
+                        <h4 class="fw-bold text-dark mb-1">Selamat Datang</h4>
+                        <p class="text-muted small">Silakan masuk menggunakan akun Anda</p>
                     </div>
 
+                    @if(session('success'))
+                        <div class="alert alert-success py-2 small mb-3 border-0 rounded-8">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @if($errors->any())
-                        <div class="alert alert-danger py-2 small mb-3">
+                        <div class="alert alert-danger py-2 small mb-3 border-0 rounded-8">
                             <ul class="mb-0 ps-3">
                                 @foreach($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -53,26 +67,24 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label fw-semibold small text-secondary">Alamat Email</label>
-                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="user123@gmail.com" required autofocus>
+                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="nama@email.com" required autofocus>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label class="form-label fw-semibold small text-secondary">Password</label>
                             <input type="password" name="password" class="form-control" placeholder="••••••••" required>
                         </div>
-                        <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold shadow-sm mb-3">LOGIN</button>
+                        <button type="submit" class="btn btn-dark w-100 py-2.5 fw-semibold shadow-sm mb-3">MASUK</button>
                     </form>
 
-                    <!-- Tautan Pindah ke Halaman Register -->
                     <div class="text-center text-muted small">
-                        Belum punya akun? <a href="{{ route('register') }}" class="text-decoration-none fw-semibold">Daftar Sekarang</a>
+                        Belum punya akun? <a href="{{ route('register') }}" class="text-decoration-none fw-semibold text-primary">Daftar Sekarang</a>
                     </div>
 
                 </div>
             </div>
 
-            <!-- Catatan Kaki Kecil -->
-            <div class="text-center mt-3 text-muted" style="font-size: 0.8rem;">
-                &copy; 2026 Uji Sertifikasi Kompetensi. SMKN 64 Jakarta
+            <div class="text-center mt-4 text-muted" style="font-size: 0.8rem;">
+                &copy; 2026 Uji Sertifikasi Kompetensi -- SMKN 64 Jakarta
             </div>
 
         </div>
