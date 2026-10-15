@@ -2,24 +2,35 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Peserta extends Model
 {
+    use HasFactory;
+
+    protected $table = 'pesertas'; // Sesuaikan jika nama tabelnya berbeda
+
+    // PASTIKAN SEMUA KOLOM INI ADA DI DALAM $fillable
     protected $fillable = [
-'skema_id',
-        'nik',
-        'nis', 
+        'user_id',
         'nama',
-        'jk',
         'email',
+        'nik',
+        'nis',
+        'skema_id',
+        'jk',
         'telp',
         'alamat',
+        'ktp',
+        'ijazah',
+        'sertifikat',
+        'status_verifikasi',
         'status',
     ];
 
     public function skema()
     {
-        return $this->belongsTo(Skema::class);
+        return $this->belongsTo(Skema::class, 'skema_id');
     }
-};
+}

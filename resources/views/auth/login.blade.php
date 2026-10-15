@@ -67,11 +67,11 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label fw-semibold small text-secondary">Alamat Email</label>
-                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="nama@email.com" required autofocus>
+                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="Masukan alamat email" required autofocus>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-semibold small text-secondary">Password</label>
-                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                            <input type="password" name="password" class="form-control" placeholder="Masukan Password" required>
                         </div>
                         <button type="submit" class="btn btn-dark w-100 py-2.5 fw-semibold shadow-sm mb-3">MASUK</button>
                     </form>

@@ -8,16 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class SkemaController extends Controller
 {
+    // BISA DIAKSES OLEH ADMIN MAUPUN USER/PESERTA
     public function index()
     {
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Akses ditolak. Halaman ini khusus untuk Administrator.');
-        }
-
+        // Pengecekan role admin DIHAPUS agar peserta biasa bisa melihat daftar skema
         $skemas = Skema::latest()->paginate(10);
         return view('skema.index', compact('skemas'));
     }
 
+    // --- KHUSUS ADMIN ---
     public function create()
     {
         if (Auth::user()->role !== 'admin') {

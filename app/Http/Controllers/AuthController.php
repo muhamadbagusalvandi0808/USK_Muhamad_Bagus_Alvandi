@@ -7,41 +7,46 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // 1. Ini untuk menampilkan halaman login
+
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
+   public function login(Request $request)
     {
-        // Validasi input
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required', 
         ], [
-            'email.required' => 'Email wajib Diisi!!',
-            'email.email'    => 'Format email tidak Valid!!',
+            'email.required'    => 'Email wajib Diisi!!',
+            'email.email'       => 'Format email tidak Valid!!',
             'password.required' => 'Password Wajib Diisi!!'
-
         ]);
 
-        $userExists = \App\Models\User::where('email', $request->email)->exists();
+        $user = \App\Models\User::where('email', $request->email)->first();
 
-        if (!$userExists) {
+        if (!$user) {
             return back()->withErrors([
                 'email' => 'Akun ini tidak terdaftar dalam sistem.',
             ])->withInput();
         }
 
-        // Cek Credentials ke database (Auth::attempt otomatis, mencocokan otomatis password yang di-hash)
-        if(Auth::attempt($credentials)){
-            $request ->session()->regenerate();
+        if ($user->role !== 'admin') {
+            $peserta = \App\Models\Peserta::where('email', $user->email)->first();
+            
+            if ($peserta && $peserta->status_verifikasi !== 'approved') {
+                return back()->withErrors([
+                    'email' => 'Akun Anda belum diverifikasi oleh Admin. Silakan menunggu proses verifikasi dokumen selesai.',
+                ])->withInput();
+            }
+        }
 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
             return redirect()->intended('/dashboard')->with('success', 'Berhasil Login!');
         }
 
-        // Jika Login gagal (Akses ditolak dan tampil pesan)
         return back()->withErrors([
             'email' => 'Email Atau Password yang anda masukan salah.',
         ])->onlyInput('email');
@@ -60,40 +65,58 @@ class AuthController extends Controller
 
     public function showRegister()
     {
-        return view('auth.register');
+        $skemas = \App\Models\Skema::all();
+        return view('auth.register', compact('skemas'));
     }
 
-    
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'nik'      => 'required|string|max:20|unique:pesertas,nik',
+            'nis'      => 'required|string|max:10|unique:pesertas,nis',
+            'skema_id' => 'required|exists:skemas,id',
+            'jk'       => 'required|in:Laki-laki,Perempuan',
+            'telp'     => 'required|string|max:15',
+            'alamat'   => 'required|string',
+            'ktp'      => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'ijazah'   => 'required|image|mimes:jpeg,png,jpg,pdf|max:2048',
         ], [
-            'name.required' => 'Nama lengkap wajib diisi!',
-            'email.required' => 'Email wajib diisi!',
-            'email.email'    => 'Format email tidak valid!',
-            'email.unique'   => 'Email sudah terdaftar, gunakan email lain!',
-            'password.required' => 'Password wajib diisi!',
-            'password.min'   => 'Password minimal harus 6 karakter!',
-            'password.confirmed' => 'Konfirmasi password tidak cocok!',
+            'name.required'     => 'Nama lengkap wajib diisi!',
+            'email.unique'      => 'Email sudah terdaftar!',
+            'nik.unique'        => 'NIK sudah terdaftar!',
+            'nis.unique'        => 'NIS sudah terdaftar!',
+            'skema_id.required' => 'Pilih skema sertifikasi terlebih dahulu!',
+            'ktp.required'      => 'Foto KTP wajib diunggah!',
+            'ijazah.required'   => 'Scan/Foto Ijazah wajib diunggah!',
         ]);
 
+        $ktpPath = $request->file('ktp')->store('dokumen/ktp', 'public');
+        $ijazahPath = $request->file('ijazah')->store('dokumen/ijazah', 'public');
+
         $user = \App\Models\User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => bcrypt($request->password),
-            'role' => 'user',
+            'role'     => 'user', 
         ]);
 
         \App\Models\Peserta::create([
-            'nama' => $request->name,
-            'email' => $request->email,
-            'nis' => '-',
-            'alamat' => '-',                      
+            'nama'              => $request->name,
+            'email'             => $request->email,
+            'nik'               => $request->nik,
+            'nis'               => $request->nis,
+            'skema_id'          => $request->skema_id,
+            'jk'                => $request->jk,
+            'telp'              => $request->telp,
+            'alamat'            => $request->alamat,
+            'ktp'               => $ktpPath,
+            'ijazah'            => $ijazahPath,
+            'status_verifikasi' => 'pending', 
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login menggunakan akun Anda.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Data dan dokumen Anda sedang dalam proses verifikasi oleh Admin.');
     }
 }

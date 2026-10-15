@@ -23,7 +23,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+    Route::post('/peserta/{id}/verifikasi', [PesertaController::class, 'verifikasi'])->name('peserta.verifikasi');
 
     Route::get('/dashboard', function () {
         return view('dashboard');

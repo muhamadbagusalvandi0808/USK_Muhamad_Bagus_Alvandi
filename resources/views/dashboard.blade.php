@@ -8,8 +8,8 @@
     </div>
 </div>
 
+@if (Auth::user()->role === 'admin')
 <div class="row">
-    @if(Auth::user()->role === 'admin')
     <div class="col-md-6 mb-3">
         <div class="card bg-primary text-white shadow-sm">
             <div class="card-body">

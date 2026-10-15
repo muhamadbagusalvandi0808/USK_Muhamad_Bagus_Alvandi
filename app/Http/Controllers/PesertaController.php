@@ -33,7 +33,7 @@ class PesertaController extends Controller
     }
 
     // Fungsi create dan store dikosongkan/dihapus karena pendaftaran peserta 
-    // kini dilakukan secara mandiri lewat proses Register & Edit Profil.
+    // kini dilakukan secara mandiri lewat proses Register & Edit/melengkapi Profil.
 
     public function show(int $id)
     {
@@ -83,8 +83,16 @@ class PesertaController extends Controller
 
         $data = $request->all();
 
-        if ($user->role !== 'admin') {
+       $oldEmail = $peserta->email;
+
+       if ($user->role !== 'admin') {
             $data['email'] = $user->email;
+        } else {
+
+            \App\Models\User::where('email', $oldEmail)->update([
+                'email' => $request->email,
+                'name'  => $request->nama
+            ]);
         }
 
         $peserta->update($data);
@@ -126,6 +134,22 @@ class PesertaController extends Controller
         ]);
 
         return redirect()->route('peserta.index')->with('success', 'Status kelulusan peserta berhasil diperbarui!');
+    }
+
+
+    public function verifikasi(int $id)
+    {
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $peserta = Peserta::findOrFail($id);
+        $peserta->update([
+            'status_verifikasi' => 'approved'
+        ]);
+
+        return redirect()->route('peserta.index')->with('success', 'Akun dan dokumen peserta berhasil diverifikasi! Peserta kini dapat login.');
     }
 
         

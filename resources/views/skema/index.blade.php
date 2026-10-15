@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@if(Auth::user()->role === 'admin')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Data Skema Sertifikasi</h3>
     <a href="{{ route('skema.create') }}" class="btn btn-primary">+ Tambah Skema</a>
@@ -44,4 +45,5 @@
         {{ $skemas->links() }}
     </div>
 </div>
+@endif
 @endsection
